@@ -13,7 +13,7 @@ public class Entrega {
     private Empresa responsavelTransporte;
     
     @Property
-    private Transporte tipoTransporte;
+    private Transporte transporte;
 
     @Property
     private String descricaoEntrega;
@@ -27,6 +27,17 @@ public class Entrega {
     @Property
     private Integer distanciaMedia;
     
+    @Property
+    private Boolean foiEntregue;
+    
+    public Boolean getFoiEntregue() {
+        return foiEntregue;
+    }
+
+    public void setFoiEntregue(Boolean foiEntregue) {
+        this.foiEntregue = foiEntregue;
+    }
+
     public Entrega() {
     }
 
@@ -46,8 +57,8 @@ public class Entrega {
         this.localEntrega = localEntrega;
     }
 
-    public Transporte getTipoTransporte() {
-        return tipoTransporte;
+    public Transporte getTransporte() {
+        return transporte;
     }
 
     public String getDescricao() {
@@ -58,8 +69,8 @@ public class Entrega {
         this.descricaoEntrega = descricao;
     }
 
-    public void setTipoTransporte(Transporte tipoTransporte) {
-        this.tipoTransporte = tipoTransporte;
+    public void setTransporte(Transporte transporte) {
+        this.transporte = transporte;
     }
 
     public Integer getDistanciaMedia() {

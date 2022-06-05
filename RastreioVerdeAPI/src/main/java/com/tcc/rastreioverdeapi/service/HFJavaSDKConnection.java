@@ -17,6 +17,7 @@ import org.hyperledger.fabric.sdk.exception.TransactionException;
 import org.hyperledger.fabric.sdk.security.CryptoSuite;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
 import org.hyperledger.fabric_ca.sdk.RegistrationRequest;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -27,7 +28,7 @@ import java.util.Properties;
 
 
 /**
- * <h1>HFJavaSDKBasicExample</h1>
+ * <h1>HFJavaSDKConnection</h1>
  * <p>
  * Simple example showcasing basic fabric-ca and fabric actions.
  * The demo required fabcar fabric up and running.
@@ -43,78 +44,135 @@ import java.util.Properties;
  *
  * @author lkolisko
  */
-public class HFJavaSDKBasicExample {
+public class HFJavaSDKConnection {
 
-    private static final Logger log = Logger.getLogger(HFJavaSDKBasicExample.class);
-
+    private static final Logger log = Logger.getLogger(HFJavaSDKConnection.class);
 
 
     public static void main(String[] args) throws Exception {
         //String sb = "{ \"id\": \"4\",   \"farm\":  \"divino oeste limitada\",   \"harvest_date\": \"2018-11-30\",   \"type\": \"organic\",   \"OperatorID\": 1 }";
-       String response = getSoybeans(10);
-       //createSoybeans("4", "fazenda 2", "2019-02-23");
-        System.out.println("Response: " + response);
+        String response = getAllRastreioVerdes();
+
+
     }
 
 
-    public static String   getSoybeans(long id) throws Exception {    
-    // create fabric-ca client
-    System.out.println("start loading credentials");
-    HFCAClient caClient = getHfCaClient("http://org1ca-api.127-0-0-1.nip.io:8080", null);
+    private static void loadCredentials(HFClient client) throws Exception {
+        // create fabric-ca client
+        System.out.println("start loading credentials");
+        HFCAClient caClient = getHfCaClient("http://org1ca-api.127-0-0-1.nip.io:8080", null);
 
-    // enroll or load admin
-    AppUser admin = getAdmin(caClient);
-    log.info(admin);
-    log.info("------------------------ADMIN CRIADO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    // register and enroll new user
-    AppUser appUser = getUser(caClient, admin, "cliente00");
-    log.info(appUser);
-    log.info("------------------------Usuario CRIADO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    // get HFC client instance
-    HFClient client = getHfClient();
-    // set user context
-    client.setUserContext(admin);
+        // enroll or load admin
+        AppUser admin = getAdmin(caClient);
+        log.info(admin);
+        // register and enroll new user
+        AppUser appUser = getUser(caClient, admin, "cliente00");
+        log.info(appUser);
 
-    // get HFC channel using the client
-    Channel channel = getChannel(client);
-    log.info("Channel: " + channel.getName());
-    System.out.println("end loading credentials");
+        // set user context
+        client.setUserContext(admin);
 
-    // call query blockchain example
-    return  readSoybeans(client, ""+id);
+        // get HFC channel using the client
+        Channel channel = getChannel(client);
+        log.info("Channel: " + channel.getName());
+        System.out.println("end loading credentials");
 
-}
+    }
 
 
 
+    public static String getRastreioVerde(long id) throws Exception {
+        HFClient client = getHfClient();
+        try {
+            loadCredentials(client);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
-public static String  createSoybeans(String id,  String farm, String date) throws Exception {    
-    // create fabric-ca client
-    System.out.println("start loading credentials");
-    HFCAClient caClient = getHfCaClient("http://localhost:17054", null);
+        // call query blockchain
+        return readRastreioVerde(client, "" + id);
+    }
 
-    // enroll or load admin
-    AppUser admin = getAdmin(caClient);
-    log.info(admin);
+    public static String getHistory(long id) throws Exception{
+        HFClient client = getHfClient();
 
-    // register and enroll new user
-    AppUser appUser = getUser(caClient, admin, "Or");
-    log.info(appUser);
+        try {
+            loadCredentials(client);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    // get HFC client instance
-    HFClient client = getHfClient();
-    // set user context
-    client.setUserContext(admin);
+        // call query blockchain
+        return readHistoryRastreioVerde(client, "" + id);
+    }
 
-    // get HFC channel using the client
-    Channel channel = getChannel(client);
-    log.info("Channel: " + channel.getName());
-    System.out.println("end loading credentials");
+    public static String getAllRastreioVerdes() throws Exception {
+        HFClient client = getHfClient();
 
-    // call query blockchain example
-    return createSoybeans(client, id, farm, date);
-}
+        try {
+            loadCredentials(client);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        // call query blockchain
+        return readAllRastreioVerdes(client);
+    }
+
+    private static String requestTransaction(HFClient client, String requestType , String arg){
+        Channel channel = client.getChannel("mychannel");
+        if (channel == null) {
+            throw new RuntimeException("Channel instance not found");
+        }
+        log.info("Channel 'mychannel' found!!!");
+
+        String response = "";
+
+        response = queryBlockchain(client, channel,requestType ,arg);
+
+        return response;
+    }
+
+    private static String queryBlockchain(HFClient client, Channel channel, String transactionType, String arg) {
+        String response = "-";
+        String[] args = new String[1];
+        ChaincodeID rastreioVerdeId = ChaincodeID.newBuilder().setName("RastreioVerde").build();
+        QueryByChaincodeRequest qpr = client.newQueryProposalRequest();
+        qpr.setChaincodeID(rastreioVerdeId);
+        qpr.setFcn(transactionType);
+        args[0] = arg;
+        qpr.setArgs(args);
+        try {
+            log.info("Querying chaincode: " + transactionType);
+            Collection<ProposalResponse> res = channel.queryByChaincode(qpr);
+            for (ProposalResponse pres : res) {
+                response = new String(pres.getChaincodeActionResponsePayload());
+                log.info("Response: "+response);
+            }
+        }
+        catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
+        catch (ProposalException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    public static String readRastreioVerde(HFClient client, String arg)  {
+        return requestTransaction(client, "readRastreioVerde", arg);
+    }
+
+    public static String readHistoryRastreioVerde(HFClient client, String arg){
+        return requestTransaction(client, "getHistoryOfRastreioVerde", arg);
+    }
+
+    public static String readAllRastreioVerdes(HFClient client){
+        return requestTransaction(client, "getAllRastreioVerde", "");
+    }
 
 
     /**
@@ -124,60 +182,25 @@ public static String  createSoybeans(String id,  String farm, String date) throw
      * @throws ProposalException
      * @throws InvalidArgumentException
      */
-    static String readSoybeans(HFClient client, String arg) throws ProposalException, InvalidArgumentException {
-        // get channel instance from client
-
-   // get channel instance from client
-   String response = "-";
-
-   Channel channel = client.getChannel("mychannel");
-   // create chaincode request
-   QueryByChaincodeRequest qpr = client.newQueryProposalRequest();
-   // build cc id providing the chaincode name. Version is omitted here.
-   ChaincodeID fabcarCCId = ChaincodeID.newBuilder().setName("RastreioVerde").build();
-   qpr.setChaincodeID(fabcarCCId);
-   // CC function to be called
-   qpr.setFcn("readRastreioVerde");
-   String[] args = new String[1];
-   args[0] = arg;
-   qpr.setArgs(args);
-   Collection<ProposalResponse> res = channel.queryByChaincode(qpr);
-   // display response
-   for (ProposalResponse pres : res) {
-       response = new String(pres.getChaincodeActionResponsePayload());
-       log.info(response);
-   }
-   return response;
-    }
-
-
-    /**
-     * Invoke blockchain query
-     *
-     * @param client The HF Client
-     * @throws ProposalException
-     * @throws InvalidArgumentException
-     */
-    static String createSoybeans(HFClient client, String id, String farm, String date) throws ProposalException, InvalidArgumentException {
+    static String createRastreioVerde(HFClient client, String id, String farm, String date) throws ProposalException, InvalidArgumentException {
         // get channel instance from client
         Channel channel = client.getChannel("mychannel");
         // create chaincode request
         TransactionProposalRequest qpr = client.newTransactionProposalRequest();
 
         // build cc id providing the chaincode name. Version is omitted here.
-        ChaincodeID fabcarCCId = ChaincodeID.newBuilder().setName("bc16").build();
+        ChaincodeID fabcarCCId = ChaincodeID.newBuilder().setName("RastreioVerde").build();
         qpr.setChaincodeID(fabcarCCId);
-        
+
         // CC function to be called
-        qpr.setFcn("createSoybeans");
-        qpr.setArgs(new String[]{id, farm, date});
+        qpr.setFcn("createRastreioVerde");
+
+        //qpr.setArgs(new String[]{id, farm, date});
 
         Collection<ProposalResponse> responses = channel.sendTransactionProposal(qpr);
-       
-        return channel.sendTransaction(responses).toString();    
+
+        return channel.sendTransaction(responses).toString();
     }
-
-
 
 
     /**

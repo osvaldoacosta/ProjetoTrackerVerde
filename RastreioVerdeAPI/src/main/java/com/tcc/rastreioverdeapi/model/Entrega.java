@@ -1,18 +1,17 @@
 package com.tcc.rastreioverdeapi.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.json.JSONObject;
 
 public class Entrega {
 
     @JsonProperty("responsavelTransporte")
     private Empresa responsavelTransporte;
 
-    @JsonProperty("tipoTransporte")
-    private Transporte tipoTransporte;
+    @JsonProperty("transporte")
+    private Transporte transporte;
 
-    @JsonProperty("descricaoEntrega")
-    private String descricaoEntrega;
+    @JsonProperty("descricao")
+    private String descricao;
 
     @JsonProperty("localEntrega")
     private String localEntrega;
@@ -23,17 +22,21 @@ public class Entrega {
     @JsonProperty("distanciaMedia")
     private Integer distanciaMedia;
 
+    @JsonProperty("foiEntregue")
+    private Boolean foiEntregue;
+
 
     public Entrega() {
     }
 
-    public Entrega(Empresa responsavelTransporte, Transporte tipoTransporte, String descricaoEntrega, String localEntrega, String localRecebimento, Integer distanciaMedia) {
+    public Entrega(Empresa responsavelTransporte, Transporte tipoTransporte, String descricaoEntrega, String localEntrega, String localRecebimento, Integer distanciaMedia, Boolean foiEntregue) {
         this.responsavelTransporte = responsavelTransporte;
-        this.tipoTransporte = tipoTransporte;
-        this.descricaoEntrega = descricaoEntrega;
+        this.transporte = tipoTransporte;
+        this.descricao = descricaoEntrega;
         this.localEntrega = localEntrega;
         this.localRecebimento = localRecebimento;
         this.distanciaMedia = distanciaMedia;
+        this.foiEntregue = foiEntregue;
     }
 
     public Empresa getResponsavelTransporte() {
@@ -44,20 +47,20 @@ public class Entrega {
         this.responsavelTransporte = responsavelTransporte;
     }
 
-    public Transporte getTipoTransporte() {
-        return tipoTransporte;
+    public Transporte getTransporte() {
+        return transporte;
     }
 
-    public void setTipoTransporte(Transporte tipoTransporte) {
-        this.tipoTransporte = tipoTransporte;
+    public void setTransporte(Transporte transporte) {
+        this.transporte = transporte;
     }
 
-    public String getDescricaoEntrega() {
-        return descricaoEntrega;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setDescricaoEntrega(String descricaoEntrega) {
-        this.descricaoEntrega = descricaoEntrega;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public String getLocalEntrega() {
@@ -84,5 +87,11 @@ public class Entrega {
         this.distanciaMedia = distanciaMedia;
     }
 
+    public Boolean getFoiEntregue() {
+        return foiEntregue;
+    }
 
+    public void setFoiEntregue(Boolean foiEntregue) {
+        this.foiEntregue = foiEntregue;
+    }
 }

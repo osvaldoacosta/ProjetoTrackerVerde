@@ -7,26 +7,26 @@ import org.json.JSONObject;
 public class RastreioVerde {
     private final static Genson genson = new Genson();
 
-    @JsonProperty("rastreioVerdeId")
-    private Long id;
+    @JsonProperty("key")
+    private Long key;
 
-    @JsonProperty("entregaJson")
+    @JsonProperty("entrega")
     private Entrega entrega;
 
-    @JsonProperty("produtoJson")
+    @JsonProperty("produto")
     private Produto produto;
 
-    @JsonProperty("remetenteJson")
+    @JsonProperty("remetente")
     private Empresa remetente;
 
-    @JsonProperty("destinatarioJson")
+    @JsonProperty("destinatario")
     private Empresa destinatario;
 
     public RastreioVerde() {
     }
 
     public RastreioVerde(String id, Entrega entrega, Produto produto, Empresa remetente, Empresa destinatario) {
-        this.id = Long.parseLong(id);
+        this.key = Long.parseLong(id);
         this.entrega = entrega;
         this.produto = produto;
         this.remetente = remetente;
@@ -34,17 +34,19 @@ public class RastreioVerde {
     }
 
     public RastreioVerde(Long id, Entrega entrega, Produto produto, Empresa remetente, Empresa destinatario) {
-        this.id = id;
+        this.key = id;
         this.entrega = entrega;
         this.produto = produto;
         this.remetente = remetente;
         this.destinatario = destinatario;
     }
 
-    public Long getId() {
-        return id;
+    public Long getKey() {
+        return key;
     }
-
+    public void setKey(Long key) {
+        this.key = key;
+    }
     public Entrega getEntrega() {
         return entrega;
     }
@@ -61,20 +63,23 @@ public class RastreioVerde {
         return destinatario;
     }
 
-    public static RastreioVerde fromJSONString(String json, Long sid)  {
-        /*
-        long id = sid;
-        String idString = new JSONObject(json).getString("rastreioVerdeId");
-        String entrega = new JSONObject(json).getString("entregaJson");
-
-        String farm = new JSONObject(json).getString("remetenteJson");
-        String destinatarioJson = new JSONObject(json).getString("destinatarioJson");
+    public static RastreioVerde fromJSONString(String json, Long id)  {
 
 
-        RastreioVerde asset = new RastreioVerde(id, farm, harvest_date);
-        */
-        return null;
+        JSONObject jsonObject = new JSONObject(json);
+
+
+        Entrega entrega = genson.deserialize(jsonObject.get("entrega").toString(), Entrega.class);
+        Produto produto = genson.deserialize(jsonObject.get("produto").toString(), Produto.class);
+        Empresa remetente = genson.deserialize(jsonObject.get("remetenteEmpresa").toString(), Empresa.class);
+        Empresa destinatario = genson.deserialize(jsonObject.get("destinatario").toString(), Empresa.class);
+
+
+        return new RastreioVerde(id,entrega,produto,remetente,destinatario);
 
     }
+
+
+
 }
 

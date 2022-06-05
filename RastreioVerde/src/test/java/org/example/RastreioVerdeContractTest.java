@@ -118,14 +118,14 @@ public final class RastreioVerdeContractTest {
         when(ctx.getStub()).thenReturn(stub);
 
         RastreioVerde asset = new  RastreioVerde();
-        Produto prod = new Produto("Produto top");
+        Produto prod = new Produto("H2 verde", "", "", "",null);
         asset.setProduto(prod);
 
         String json = asset.toJSONString();
         when(stub.getState("10001")).thenReturn(json.getBytes(StandardCharsets.UTF_8));
 
         RastreioVerde returnedAsset = contract.readRastreioVerde(ctx, "10001");
-        assertEquals(returnedAsset.getProduto(), asset.getProduto());
+        assertEquals(returnedAsset, asset);
     }
 
     @Nested
@@ -138,7 +138,7 @@ public final class RastreioVerdeContractTest {
             when(ctx.getStub()).thenReturn(stub);
             when(stub.getState("10001")).thenReturn(new byte[] { 42 });
 
-            contract.updateRastreioVerde(ctx, "10001", "updates");
+            contract.updateRastreioVerde(ctx, "10001", "updates","","","");
 
             String json = "{\"value\":\"updates\"}";
             verify(stub).putState("10001", json.getBytes(UTF_8));
@@ -154,7 +154,7 @@ public final class RastreioVerdeContractTest {
             when(stub.getState("10001")).thenReturn(null);
 
             Exception thrown = assertThrows(RuntimeException.class, () -> {
-                contract.updateRastreioVerde(ctx, "10001", "TheRastreioVerde");
+                contract.updateRastreioVerde(ctx, "10001", "TheRastreioVerde", "","","");
             });
 
             assertEquals(thrown.getMessage(), "The asset 10001 does not exist");

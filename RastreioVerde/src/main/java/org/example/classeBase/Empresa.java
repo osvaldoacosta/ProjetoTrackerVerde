@@ -11,26 +11,26 @@ public class Empresa {
     private final static Genson genson = new Genson();
 
     @Property
-    private String cnpj; //Talvez mude pra algum outro tipo de identificador
+    private String id; 
 
     @Property
     private String nome;
 
 
     public Empresa(String cnpj, String nome) {
-        this.cnpj = cnpj;
+        this.id = cnpj;
         this.nome = nome;
     }
 
     public Empresa(){
     }
 
-    public String getCnpj() {
-        return cnpj;
+    public String getId() {
+        return id;
     }
 
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNome() {

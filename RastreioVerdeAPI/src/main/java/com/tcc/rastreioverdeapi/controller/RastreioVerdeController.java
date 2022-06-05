@@ -1,13 +1,14 @@
 package com.tcc.rastreioverdeapi.controller;
 
-import com.tcc.rastreioverdeapi.model.Empresa;
 import com.tcc.rastreioverdeapi.model.RastreioVerde;
 
-import com.tcc.rastreioverdeapi.service.HFJavaSDKBasicExample;
+import com.tcc.rastreioverdeapi.model.RastreioVerdeCompleto;
+import com.tcc.rastreioverdeapi.service.HFJavaSDKConnection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,45 +21,91 @@ import java.util.List;
 @Api(value = "Set of endpoints for CRUD Trade operations")
 public class RastreioVerdeController {
 
-  /*
-    @GetMapping("/contratos")
-    @ApiOperation(value = "Get all contratos", nickname = "getAll")
-    public ResponseEntity<List<Empresa>> getAll() {
-        List<Empresa> empresas = new ArrayList<>();
-        Empresa rastreioVerde = new Empresa("013131", "Oi");
-        Empresa empresa = new Empresa("1455151", "TIm");
-        empresas.add(empresa);
-        empresas.add(rastreioVerde);
 
-        return new ResponseEntity<List<Empresa>>(empresas, HttpStatus.OK);
+
+    @GetMapping("/rastreio/")
+    @ApiOperation(value = "Retorna o todos os rastreios verdes")
+
+    public ResponseEntity<List<RastreioVerde>> getAll(){
+        String resposta = "";
+
+        try{
+            resposta = HFJavaSDKConnection.getAllRastreioVerdes();
+        }
+        catch(Exception e){
+            e.getMessage();
+            return ResponseEntity.notFound().build();
+        }
+        JSONArray jsonArray = new JSONArray(resposta);
+        List<RastreioVerde> rastreioVerdeList = new ArrayList<>();
+
+        for(int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = jsonArray.getJSONObject(i);
+            } catch (JSONException jsonException) {
+                jsonException.getMessage();
+            }
+            if (jsonObject != null) {
+                JSONObject value = jsonObject.getJSONObject("value");
+                Long key = jsonObject.getLong("key");
+                RastreioVerde rv= RastreioVerde.fromJSONString(value.toString(), key);
+                rastreioVerdeList.add(rv);
+            }
+        }
+        return ResponseEntity.ok(rastreioVerdeList);
     }
-*/
 
-    @GetMapping("/{id}")
-    @ApiOperation(value = "Retorna Transporte")
-    public Object getTransporte(@PathVariable Long id){
+
+
+    @GetMapping("/rastreio/recente/{id}")
+    @ApiOperation(value = "Retorna o ultimo rastreio verde")
+
+    public ResponseEntity<RastreioVerde> getRecente(@PathVariable Long id){
         String transporte = "";
 
         try{
-            transporte = HFJavaSDKBasicExample.getSoybeans(id);
+            transporte = HFJavaSDKConnection.getRastreioVerde(id);
         }catch(Exception e){
-            return e.getMessage();
+            e.getMessage();
+            return ResponseEntity.notFound().build();
         };
-        RastreioVerde rastreioVerde = RastreioVerde.fromJSONString(transporte);
-        return rastreioVerde;
+        RastreioVerde rastreioVerde = RastreioVerde.fromJSONString(transporte, id);
+        return ResponseEntity.ok().body(rastreioVerde);
     }
 
-/*
-    public Soybeans getSoybeans(@PathVariable Long id) {
+    @GetMapping("/rastreio/historico/{id}")
+    @ApiOperation(value = "Retorna o historico do rastreio verde")
+    public ResponseEntity<List<RastreioVerdeCompleto>> getHistory(@PathVariable Long id){
+        String resposta = "";
 
-        String soybeans  = "";
-        try {soybeans = HFJavaSDKBasicExample.getSoybeans(id);} catch(Exception e){};
+        try{
+            resposta = HFJavaSDKConnection.getHistory(id);
+        }catch(Exception e){
+            e.getMessage();
+            return ResponseEntity.notFound().build();
+        };
+        JSONArray jsonArray = new JSONArray(resposta);
+        List<RastreioVerdeCompleto> rastreioVerdeList = new ArrayList<>();
 
-        System.out.print(soybeans);
-        Soybeans newAsset = Soybeans.fromJSONString(soybeans,id);
+        for(int i = 0; i < jsonArray.length(); i++){
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = jsonArray.getJSONObject(i);
+            }
+            catch (JSONException jsonException){
+                jsonException.getMessage();
+                return ResponseEntity.notFound().build();
+            }
+            if(jsonObject != null){
+                RastreioVerdeCompleto rvCompleto = (RastreioVerdeCompleto) RastreioVerdeCompleto.fromJSONString(jsonObject.toString(), id);
+                rastreioVerdeList.add(rvCompleto);
+            }
 
-        return newAsset;
+        }
+
+
+
+        return ResponseEntity.ok().body(rastreioVerdeList);
     }
-
- */
 }

@@ -51,7 +51,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../RastreioVerdeTCC/RastreioVerdeAPI" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Github/RastreioVerdeHF/RastreioVerdeAPI" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -84,8 +84,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="HFJavaSDKBasicExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.tcc.rastreioverdeapi.service.HFJavaSDKBasicExample" />
+    <configuration name="HFJavaSDKConnection" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.tcc.rastreioverdeapi.service.HFJavaSDKConnection" />
       <module name="RastreioVerdeAPI" />
       <extension name="coverage">
         <pattern>
@@ -145,7 +145,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.HFJavaSDKBasicExample" />
+        <item itemvalue="Application.HFJavaSDKConnection" />
         <item itemvalue="Application.HFUser" />
         <item itemvalue="Application.RastreioVerdeRepository" />
         <item itemvalue="Application.EmpresaRepository" />
@@ -177,8 +177,17 @@
       <workItem from="1653351936391" duration="2560000" />
       <workItem from="1653414646503" duration="7652000" />
       <workItem from="1653586528573" duration="1295000" />
-      <workItem from="1653591441827" duration="3813000" />
-      <workItem from="1653595380971" duration="25000" />
+      <workItem from="1653591441827" duration="3714000" />
+      <workItem from="1653595407409" duration="944000" />
+      <workItem from="1653958022184" duration="2510000" />
+      <workItem from="1654238972993" duration="2116000" />
+      <workItem from="1654297465924" duration="1286000" />
+      <workItem from="1654300817666" duration="22000" />
+      <workItem from="1654333993425" duration="680000" />
+      <workItem from="1654336027014" duration="304000" />
+      <workItem from="1654374620806" duration="798000" />
+      <workItem from="1654377587395" duration="9899000" />
+      <workItem from="1654418529680" duration="448000" />
     </task>
     <servers />
   </component>
