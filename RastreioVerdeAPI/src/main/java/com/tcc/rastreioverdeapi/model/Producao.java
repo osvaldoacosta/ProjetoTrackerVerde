@@ -1,23 +1,23 @@
 package com.tcc.rastreioverdeapi.model;
 
 public class Producao {
-    private String volumeGeradoHr;
-    private String energiaConsumidaEmMJ;
+    private Double volumeGeradoHr;
+    private Double energiaConsumidaEmMJ;
     private String fonteEnergiaPProducao;
 
     public Producao() {
     }
 
-    public String getVolumeGeradoHr() {
+    public Double getVolumeGeradoHr() {
         return volumeGeradoHr;
     }
-    public void setVolumeGeradoHr(String volumeGeradoHr) {
+    public void setVolumeGeradoHr(Double volumeGeradoHr) {
         this.volumeGeradoHr = volumeGeradoHr;
     }
-    public String getEnergiaConsumidaEmMJ() {
+    public Double getEnergiaConsumidaEmMJ() {
         return energiaConsumidaEmMJ;
     }
-    public void setEnergiaConsumidaEmMJ(String energiaConsumidaEmMJ) {
+    public void setEnergiaConsumidaEmMJ(Double energiaConsumidaEmMJ) {
         this.energiaConsumidaEmMJ = energiaConsumidaEmMJ;
     }
     public String getFonteEnergiaPProducao() {

@@ -7,12 +7,12 @@ public class Transporte {
     private String identificadorVeiculo;
 
     @JsonProperty("emissaoPorKm")
-    private String emissaoPorKm;
+    private Double emissaoPorKm;
 
     @JsonProperty("tipoVeiculo")
     private String tipoVeiculo;
 
-    public Transporte(String identificadorVeiculo, String emissaoPorKm, String tipoVeiculo) {
+    public Transporte(String identificadorVeiculo, Double emissaoPorKm, String tipoVeiculo) {
         this.identificadorVeiculo = identificadorVeiculo;
         this.emissaoPorKm = emissaoPorKm;
         this.tipoVeiculo = tipoVeiculo;
@@ -29,11 +29,11 @@ public class Transporte {
         this.identificadorVeiculo = identificadorVeiculo;
     }
 
-    public String getEmissaoPorKm() {
+    public Double getEmissaoPorKm() {
         return emissaoPorKm;
     }
 
-    public void setEmissaoPorKm(String emissaoPorKm) {
+    public void setEmissaoPorKm(Double emissaoPorKm) {
         this.emissaoPorKm = emissaoPorKm;
     }
 
