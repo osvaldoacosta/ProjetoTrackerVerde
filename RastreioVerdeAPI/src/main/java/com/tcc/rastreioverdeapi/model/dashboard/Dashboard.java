@@ -1,8 +1,6 @@
 package com.tcc.rastreioverdeapi.model.dashboard;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.models.auth.In;
-
 import java.util.HashMap;
 
 public class Dashboard extends DashboardIndividual{

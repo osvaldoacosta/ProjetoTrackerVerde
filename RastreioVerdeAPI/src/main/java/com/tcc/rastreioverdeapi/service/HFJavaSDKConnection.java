@@ -327,7 +327,7 @@ public class HFJavaSDKConnection {
      * @throws Exception
      */
     static AppUser tryDeserialize(String name) throws Exception {
-        if (Files.exists(Paths.get(name + ".jso"))) {
+        if (Files.exists(Paths.get(name+".jso"))) {
             return deserialize(name);
         }
         return null;
@@ -335,7 +335,7 @@ public class HFJavaSDKConnection {
 
     static AppUser deserialize(String name) throws Exception {
         try (ObjectInputStream decoder = new ObjectInputStream(
-                Files.newInputStream(Paths.get(name + ".jso")))) {
+                Files.newInputStream(Paths.get(name+".jso")))) {
             return (AppUser) decoder.readObject();
         }
     }

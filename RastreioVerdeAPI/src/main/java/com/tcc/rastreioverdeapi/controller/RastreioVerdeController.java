@@ -7,8 +7,8 @@ import com.tcc.rastreioverdeapi.model.RastreioVerdeCompleto;
 import com.tcc.rastreioverdeapi.model.dashboard.Dashboard;
 import com.tcc.rastreioverdeapi.model.dashboard.DashboardIndividual;
 import com.tcc.rastreioverdeapi.service.HFJavaSDKConnection;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,13 +25,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("*")
-@Api(value = "Set of endpoints for CRUD Trade operations")
 public class RastreioVerdeController {
 
 
 
-    @GetMapping("/rastreio/")
-    @ApiOperation(value = "Retorna o todos os rastreios verdes")
 
     private List<RastreioVerde> getAllAndReturnListOfRV() throws Exception {
         String resposta = "";
@@ -64,7 +61,6 @@ public class RastreioVerdeController {
         return rastreioVerdeList;
     }
     @GetMapping("/rastreio")
-    @ApiOperation(value = "Retorna todos os rastreios verdes")
     public ResponseEntity<List<RastreioVerde>> getAll(){
 
         List<RastreioVerde> rvList = new ArrayList<>();
@@ -81,7 +77,6 @@ public class RastreioVerdeController {
 
 
     @GetMapping("/rastreio/recente/{id}")
-    @ApiOperation(value = "Retorna o ultimo rastreio verde")
 
     public ResponseEntity<RastreioVerde> getRecente(@PathVariable Long id){
         String resposta = "";
@@ -127,7 +122,6 @@ public class RastreioVerdeController {
     }
 
     @GetMapping("/rastreio/historico/{id}")
-    @ApiOperation(value = "Retorna o historico do rastreio verde")
     public ResponseEntity<List<RastreioVerdeCompleto>> getHistoryAndReturnJson(@PathVariable Long id){
         List<RastreioVerdeCompleto> rvList;
         try {
@@ -142,7 +136,6 @@ public class RastreioVerdeController {
     }
 
     @GetMapping("/rastreio/relatorio")
-    @ApiOperation(value = "Retorna informações sobre todos os contratos")
     public ResponseEntity<Dashboard> getRelatorioGeral(){
         List<List<RastreioVerdeCompleto>> rvCompletoList= new ArrayList<>();
         try {
